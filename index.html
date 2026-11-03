@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jenga toernooi · Café De Trap Af</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:"Geizer";src:url(fonts/Geizer.otf) format("opentype");font-display:swap}
+@font-face{font-family:"OldEnglish";src:url(fonts/old-english-five_regular.ttf) format("truetype");font-display:swap}
+:root{
+  --ink:#fff1e3; --ink-dim:#d2b89c; --blood:#b84a00; --blood-deep:#2e1200;
+  --panel:rgba(26,10,0,.74); --line:#ff9a3c; --win:#ffb15c; --win-ink:#1f0a00;
+  --display:"Geizer","Impact","Arial Narrow",sans-serif;
+  --body:"Open Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color-scheme:dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--body);
+  background: linear-gradient(rgba(14,5,0,.35),rgba(14,5,0,.55)),url(images/backdrop-oranje2.jpg) center/cover fixed no-repeat}
+.wrap{max-width:1200px;margin:0 auto;padding:28px 18px 60px}
+header{text-align:center;margin-bottom:26px}
+.logo{font-family:"OldEnglish","UnifrakturCook",serif;font-size:clamp(2.2rem,7vw,3.6rem);margin:0;line-height:1.1;font-weight:400}
+h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(2.6rem,10vw,6rem);line-height:.95;margin:.1em 0 .15em;letter-spacing:.01em}
+.sub{margin:0;color:var(--ink-dim);font-size:.95rem}
+.bar{background:var(--line);color:#1a0800;font-family:var(--display);text-transform:uppercase;font-size:1.15rem;letter-spacing:.04em;padding:8px 14px}
+.box{border:1.5px solid var(--line);background:var(--panel);backdrop-filter:blur(2px);margin-bottom:22px}
+.box .in{padding:16px 14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+input[type=text]{flex:1 1 220px;min-width:0;padding:12px 14px;font:600 1rem var(--body);color:var(--ink);background:rgba(14,5,0,.5);border:1.5px solid var(--line);border-radius:0}
+input::placeholder{color:#a58a70}
+button{font:inherit;color:inherit;cursor:pointer;border-radius:0}
+.btn{font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:1.15rem;padding:10px 20px;background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn:hover{background:rgba(255,154,60,.18)}
+.btn.primary{background:var(--line);color:#1a0800}
+.btn.primary:hover{background:#ffb15c}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.small{font-size:.95rem;padding:7px 12px}
+:focus-visible{outline:2px solid #ffd08a;outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;min-height:20px}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);padding:5px 6px 5px 11px;font-weight:700;text-transform:uppercase;font-size:.85rem;background:rgba(0,0,0,.4)}
+.chip button{background:none;border:0;padding:0 5px;font-size:1.1rem;line-height:1;color:var(--ink-dim)}
+.chip button:hover{color:#fff}
+.chip.off{opacity:.45;text-decoration:line-through}
+.chip.tog{cursor:pointer;padding:5px 11px}
+.stepper{display:flex;align-items:center;border:1.5px solid var(--line)}
+.stepper button{width:42px;background:transparent;border:0;font-size:1.4rem;font-family:var(--display)}
+.stepper button:hover{background:rgba(255,154,60,.18)}
+.stepper span{min-width:44px;text-align:center;font-family:var(--display);font-size:1.5rem}
+.lbl{font-weight:700;font-size:.9rem;align-self:center}
+.hint{margin:14px 0 0;font-size:.9rem;color:var(--ink-dim);line-height:1.5}
+.hint b{color:var(--ink)}
+.empty{color:var(--ink-dim);font-size:.9rem}
+.top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.champ{text-align:center;padding:22px 14px;border:1.5px solid var(--line);background:var(--blood);margin-bottom:22px}
+.champ .k{font-size:.9rem;font-weight:700;color:#ffe3c4}
+.champ .n{font-family:var(--display);text-transform:uppercase;font-size:clamp(2rem,8vw,3.8rem);line-height:1;margin-top:4px}
+.rounds{display:flex;gap:20px;overflow-x:auto;padding:16px 14px 14px;-webkit-overflow-scrolling:touch}
+.col{display:flex;flex-direction:column;justify-content:space-around;gap:14px;min-width:235px;flex:0 0 235px}
+.col h3{margin:0 0 2px;font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:1rem;letter-spacing:.05em;color:var(--ink-dim);text-align:center}
+.mwrap{display:flex;flex-direction:column;justify-content:space-around;gap:14px;flex:1}
+.match{border:1.5px solid var(--line);background:rgba(16,6,0,.72)}
+.match.ghost{visibility:hidden;height:84px}
+.match.auto{opacity:.55;border-style:dashed}
+.mh{font-size:.7rem;font-weight:700;color:var(--ink-dim);padding:3px 9px;border-bottom:1px solid rgba(255,255,255,.2)}
+.slot{display:block;width:100%;text-align:left;border:0;background:transparent;padding:10px 10px;min-height:42px;font-weight:800;text-transform:uppercase;font-size:.88rem;line-height:1.2;color:var(--ink)}
+.slot+.slot{border-top:1px solid rgba(255,255,255,.35)}
+button.slot:hover{background:rgba(255,154,60,.2)}
+.slot.win{background:var(--win);color:var(--win-ink)}
+.slot.lose{opacity:.4;text-decoration:line-through}
+.slot.pend,.slot.bye{color:#a58a70;font-weight:600;text-transform:none;font-style:italic;cursor:default}
+.slot.bye{font-style:normal;letter-spacing:.08em}
+.lbnote{font-size:.85rem;color:var(--ink-dim);margin:0 0 12px;line-height:1.5}
+footer{text-align:center;margin-top:34px;font-weight:700;font-size:.85rem;line-height:1.7;color:var(--ink)}
+footer .big{font-family:var(--display);font-size:1.7rem;letter-spacing:.05em;margin-bottom:4px;text-transform:uppercase}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="logo">Café De Trap Af</p>
+    <h1>Jenga toernooi</h1>
+    <p class="sub">Boardgame dag ⚅</p>
+  </header>
+
+  <section id="setup">
+    <div class="box">
+      <div class="bar">Inschrijvingen</div>
+      <div class="in">
+        <div class="row">
+          <input type="text" id="name" placeholder="Naam toevoegen en op Enter drukken" autocomplete="off" aria-label="Naam van speler">
+          <button class="btn" id="add">Toevoegen</button>
+        </div>
+        <p class="hint" style="margin-top:8px">Meerdere namen tegelijk plakken kan ook, gescheiden door een komma of nieuwe regel.</p>
+        <div class="chips" id="chips"></div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="bar">Jenga torens</div>
+      <div class="in">
+        <div class="row">
+          <span class="lbl">Aantal torens op locatie</span>
+          <div class="stepper"><button id="tm" aria-label="Minder torens">−</button><span id="tc">4</span><button id="tp" aria-label="Meer torens">+</button></div>
+        </div>
+        <p class="hint" id="plan"></p>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="start">Start toernooi</button>
+      <button class="btn" id="clear">Lijst leegmaken</button>
+    </div>
+  </section>
+
+  <section id="game" class="hide">
+    <div class="top">
+      <div class="hint" style="margin:0" id="info"></div>
+      <div class="row">
+        <button class="btn small" id="redo">Opnieuw loten</button>
+        <button class="btn small" id="back">Terug naar inschrijvingen</button>
+      </div>
+    </div>
+    <div id="champ"></div>
+    <div class="box">
+      <div class="bar">Hoofdbracket</div>
+      <div class="rounds" id="wb"></div>
+    </div>
+    <div class="box" id="lbbox">
+      <div class="bar">Loser bracket</div>
+      <div class="in">
+        <p class="lbnote">Verliezers uit het hoofdbracket kunnen hier nog verder spelen voor de troostprijs. Meedoen is optioneel: tik op een naam om af te melden of weer aan te melden. De winnaar van het loser bracket telt niet mee voor de hoofdprijs.</p>
+        <div class="chips" id="lbchips" style="margin:0 0 4px"></div>
+        <p class="lbnote hide" id="lbwin" style="margin:12px 0 0"></p>
+      </div>
+      <div class="rounds" id="lb"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="big">Gratis Inschrijving</div>
+    Westeind 76 | Insta: @CafeDeTrapAf | Facebook: CafeDeTrapAf
+  </footer>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const KEY='trapaf-jenga-v1';
+let S={players:[],towers:4,t:null};
+try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&Array.isArray(x.players))S=x}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* ---------- bracket opbouw ---------- */
+function seedOrder(n){let o=[1,2];while(o.length<n){const m=o.length*2+1;o=o.flatMap(x=>[x,m-x])}return o}
+function layout(P,towers){
+  const cap=towers*2,E=Math.min(P,cap),base=Math.floor(P/E),extra=P%E;
+  return{cap,E,base,extra};
+}
+function build(players,towers){
+  const P=shuffle(players.slice()),{E,base,extra}=layout(P.length,towers);
+  let entries=[],p=0;
+  for(let i=0;i<E;i++){const n=base+(i<extra?1:0);entries.push({id:i,names:P.slice(p,p+n),lbOut:false});p+=n}
+  entries=shuffle(entries);
+  let N=2;while(N<E)N*=2;
+  const k=Math.log2(N),ms=[];let id=0;
+  const mk=(br,r,a,b)=>{const m={id:id++,br,r,a,b,win:null};ms.push(m);return m};
+  const ord=seedOrder(N),seed=s=>({k:'seed',e:s<=E?entries[s-1].id:null});
+  const W=[[]];
+  for(let i=0;i<N/2;i++)W[0].push(mk('W',1,seed(ord[2*i]),seed(ord[2*i+1])));
+  for(let r=2;r<=k;r++){const pr=W[r-2],cur=[];for(let i=0;i<pr.length/2;i++)cur.push(mk('W',r,{k:'W',m:pr[2*i].id},{k:'W',m:pr[2*i+1].id}));W.push(cur)}
+  let lr=0,lp=null;
+  for(let j=1;j<k;j++){
+    lr++;let cur=[];
+    if(j===1){for(let i=0;i<W[0].length/2;i++)cur.push(mk('L',lr,{k:'L',m:W[0][2*i].id},{k:'L',m:W[0][2*i+1].id}))}
+    else{for(let i=0;i<lp.length/2;i++)cur.push(mk('L',lr,{k:'W',m:lp[2*i].id},{k:'W',m:lp[2*i+1].id}))}
+    lp=cur;lr++;cur=[];
+    const drop=W[j];
+    for(let i=0;i<lp.length;i++)cur.push(mk('L',lr,{k:'W',m:lp[i].id},{k:'L',m:drop[lp.length-1-i].id}));
+    lp=cur;
+  }
+  return{entries,matches:ms,towers,k,N,total:players.length};
+}
+
+/* ---------- uitkomsten berekenen ---------- */
+function resolve(t){
+  const em={},mm={},memo={},BYE={s:'bye'},PEND={s:'pend'};
+  t.entries.forEach(e=>em[e.id]=e);t.matches.forEach(m=>mm[m.id]=m);
+  const slot=(m,src)=>{
+    let v;
+    if(src.k==='seed')v=src.e===null?BYE:{s:'e',e:em[src.e]};
+    else{const r=res(mm[src.m]);v=src.k==='W'?r.w:r.l}
+    return(m.br==='L'&&v.s==='e'&&v.e.lbOut)?BYE:v;
+  };
+  const res=m=>{
+    if(memo[m.id])return memo[m.id];
+    const a=slot(m,m.a),b=slot(m,m.b);let w=PEND,l=PEND,auto=false;
+    if(a.s==='bye'&&b.s==='bye'){w=BYE;l=BYE}
+    else if(a.s==='bye'){l=BYE;if(b.s==='e'){w=b;auto=true}}
+    else if(b.s==='bye'){l=BYE;if(a.s==='e'){w=a;auto=true}}
+    else if(a.s==='e'&&b.s==='e'){
+      if(m.win===a.e.id){w=a;l=b}else if(m.win===b.e.id){w=b;l=a}
+    }
+    return memo[m.id]={a,b,w,l,auto};
+  };
+  t.matches.forEach(res);
+  return memo;
+}
+const label=e=>e.names.join(' & ');
+
+/* ---------- weergave ---------- */
+function planText(P,towers){
+  if(P<2)return'Voeg minimaal 2 spelers toe om te starten.';
+  const{E,base,extra}=layout(P,towers);
+  if(P<=towers*2){
+    const N=Math.max(2,2**Math.ceil(Math.log2(E))),byes=N-E;
+    return`<b>${P} spelers</b> en ${towers} ${towers===1?'toren':'torens'}: iedereen speelt 1 tegen 1.`+(byes?` ${byes} ${byes===1?'speler heeft':'spelers hebben'} een bye (gaat direct door).`:'');
+  }
+  let d;
+  if(extra===0)d=`${E} teams van ${base}`;
+  else d=`${extra} ${extra===1?'team':'teams'} van ${base+1}`+(E-extra?` en ${E-extra} ${base===1?'solospeler'+(E-extra===1?'':'s'):'teams van '+base}`:'');
+  return`<b>${P} spelers</b> en ${towers} ${towers===1?'toren':'torens'}: te veel voor 1 tegen 1, dus er worden willekeurig teams gemaakt. Ronde 1 wordt ${E} deelnemers: ${d}.`;
+}
+function renderSetup(){
+  $('#chips').innerHTML=S.players.length?S.players.map((n,i)=>`<span class="chip">${esc(n)}<button data-rm="${i}" aria-label="Verwijder ${esc(n)}">×</button></span>`).join(''):'<span class="empty">Nog geen spelers. Voeg de eerste naam toe.</span>';
+  $('#tc').textContent=S.towers;
+  $('#tm').disabled=S.towers<=1;$('#tp').disabled=S.towers>=4;
+  $('#plan').innerHTML=planText(S.players.length,S.towers);
+  $('#start').disabled=S.players.length<2;
+  $('#clear').disabled=!S.players.length;
+}
+const roundName=(br,r,k)=>br==='W'?(r===k?'Finale':r===k-1?'Halve finale':r===k-2?'Kwartfinale':'Ronde '+r):(r===k?'Loser finale':'Loser ronde '+r);
+function matchHTML(m,R){
+  const r=R[m.id];
+  if(r.a.s==='bye'&&r.b.s==='bye')return'<div class="match ghost"></div>';
+  const both=r.a.s==='e'&&r.b.s==='e';
+  const side=(v,src)=>{
+    if(v.s==='bye')return'<div class="slot bye">BYE</div>';
+    if(v.s==='pend')return`<div class="slot pend">${src.k==='L'?'Verliezer':'Winnaar'} #${src.m+1}</div>`;
+    const cls=r.w.s==='e'?(r.w.e===v.e?' win':' lose'):'';
+    return both?`<button class="slot${cls}" data-win="${m.id}" data-e="${v.e.id}">${esc(label(v.e))}</button>`:`<div class="slot${cls}">${esc(label(v.e))}</div>`;
+  };
+  return`<div class="match${r.auto?' auto':''}"><div class="mh">#${m.id+1}${r.auto?' · gaat door':''}</div>${side(r.a,m.a)}${side(r.b,m.b)}</div>`;
+}
+function cols(t,R,br){
+  const ms=t.matches.filter(m=>m.br===br);
+  if(!ms.length)return'';
+  const last=Math.max(...ms.map(m=>m.r)),out=[];
+  for(let r=1;r<=last;r++){
+    const g=ms.filter(m=>m.r===r);
+    out.push(`<div class="col"><h3>${roundName(br,r,br==='W'?t.k:last)}</h3><div class="mwrap">${g.map(m=>matchHTML(m,R)).join('')}</div></div>`);
+  }
+  return out.join('');
+}
+function renderGame(){
+  const t=S.t,R=resolve(t);
+  $('#info').innerHTML=`${t.total} spelers · ${t.towers} ${t.towers===1?'toren':'torens'} · ${t.entries.length} deelnemers in ronde 1`+(t.entries.some(e=>e.names.length>1)?' (teams ingedeeld)':'');
+  const wl=t.matches.filter(m=>m.br==='W'),fin=R[wl[wl.length-1].id];
+  $('#champ').innerHTML=fin.w.s==='e'?`<div class="champ"><div class="k">Winnaar van het toernooi</div><div class="n">${esc(label(fin.w.e))}</div></div>`:'';
+  $('#wb').innerHTML=cols(t,R,'W');
+  const lms=t.matches.filter(m=>m.br==='L');
+  $('#lbbox').classList.toggle('hide',!lms.length);
+  if(lms.length){
+    const losers=[];wl.forEach(m=>{const l=R[m.id].l;if(l.s==='e')losers.push(l.e)});
+    $('#lbchips').innerHTML=losers.length?losers.map(e=>`<button class="chip tog${e.lbOut?' off':''}" data-lb="${e.id}" title="${e.lbOut?'Weer aanmelden':'Afmelden'}">${esc(label(e))}</button>`).join(''):'<span class="empty">Zodra er verliezers zijn verschijnen ze hier.</span>';
+    $('#lb').innerHTML=cols(t,R,'L');
+    const lf=R[lms[lms.length-1].id],box=$('#lbwin');
+    const done=lf.w.s==='e';
+    box.classList.toggle('hide',!done);
+    if(done)box.innerHTML='Winnaar loser bracket: <b>'+esc(label(lf.w.e))+'</b>';
+  }
+}
+function render(){
+  const playing=!!S.t;
+  $('#setup').classList.toggle('hide',playing);$('#game').classList.toggle('hide',!playing);
+  playing?renderGame():renderSetup();
+}
+
+/* ---------- acties ---------- */
+function addNames(){
+  const el=$('#name');
+  el.value.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean).forEach(n=>S.players.push(n));
+  el.value='';save();render();el.focus();
+}
+$('#add').onclick=addNames;
+$('#name').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addNames()}});
+$('#name').addEventListener('paste',()=>setTimeout(()=>{if(/[\n,;]/.test($('#name').value))addNames()},0));
+$('#chips').onclick=e=>{const b=e.target.closest('[data-rm]');if(b){S.players.splice(+b.dataset.rm,1);save();render()}};
+$('#tm').onclick=()=>{S.towers=Math.max(1,S.towers-1);save();render()};
+$('#tp').onclick=()=>{S.towers=Math.min(4,S.towers+1);save();render()};
+$('#clear').onclick=()=>{if(confirm('Hele lijst met spelers leegmaken?')){S.players=[];save();render()}};
+$('#start').onclick=()=>{S.t=build(S.players,S.towers);save();render();window.scrollTo(0,0)};
+$('#redo').onclick=()=>{if(confirm('Opnieuw loten? De huidige uitslagen gaan verloren.')){S.t=build(S.players,S.towers);save();render()}};
+$('#back').onclick=()=>{if(confirm('Terug naar de inschrijvingen? De bracket en uitslagen gaan verloren.')){S.t=null;save();render()}};
+$('#game').addEventListener('click',e=>{
+  const w=e.target.closest('[data-win]');
+  if(w){const m=S.t.matches[+w.dataset.win],id=+w.dataset.e;m.win=m.win===id?null:id;save();render();return}
+  const l=e.target.closest('[data-lb]');
+  if(l){const en=S.t.entries.find(x=>x.id===+l.dataset.lb);en.lbOut=!en.lbOut;save();render()}
+});
+render();
+</script>
+</body>
+</html>

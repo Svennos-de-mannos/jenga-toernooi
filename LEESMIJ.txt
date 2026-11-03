@@ -1,0 +1,7 @@
+Jenga toernooi - Cafe De Trap Af
+
+Open index.html in een browser (dubbelklik). Houd de mappen fonts en images naast index.html.
+
+Achtergrond wisselen: in index.html staat url(images/backdrop.jpg). Vervang dat door url(images/backdrop-oranje.jpg) voor de oranje variant.
+
+De stand wordt bewaard in de browser van het toestel. Open Sans wordt van Google Fonts geladen (internet nodig, anders valt het terug op een standaard sans-serif).
